@@ -46,9 +46,12 @@ namespace API.Data
 
             query = messageParams.Container switch
             {
-                "Inbox" => query.Where(x => x.Recipient.UserName == messageParams.Username),
-                "Outbox" => query.Where(x => x.Sender.UserName == messageParams.Username),
+                "Inbox" => query.Where(x => x.Recipient.UserName == messageParams.Username
+                                            && x.RecipientDeleted == false),
+                "Outbox" => query.Where(x => x.Sender.UserName == messageParams.Username
+                                             && x.SenderDeleted == false),
                 _ => query.Where(x => x.Recipient.UserName == messageParams.Username
+                                      && x.RecipientDeleted == false
                                       && x.DateRead == null)
             };
 
@@ -64,8 +67,10 @@ namespace API.Data
                                          .Include(x => x.Recipient).ThenInclude(x => x.Photos)
                                          .Where(x => x.Recipient.UserName == currentUsername
                                                      && x.Sender.UserName == recipientUsername
+                                                     && x.RecipientDeleted == false
                                                      || x.Recipient.UserName == recipientUsername
-                                                     && x.Sender.UserName == currentUsername)
+                                                     && x.Sender.UserName == currentUsername
+                                                     && x.SenderDeleted == false)
                                          .OrderBy(x => x.MessageSent)
                                          .ToListAsync();
 
