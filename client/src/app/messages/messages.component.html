@@ -33,7 +33,8 @@
             <th style="width: 20%;">Sent / Received</th>
             <th style="width: 20%;"></th>
         </tr>
-        <tr *ngFor="let message of messages"
+        <tr [hidden]="loading"
+            *ngFor="let message of messages"
             routerLink="{{container === 'Outbox' 
                             ? '/members/' + message.recipientUsername 
                             : '/members/' + message.senderUsername}}"
@@ -61,7 +62,7 @@
     </table>
 </div>
 
-<div class="d-flex justify-content-center" *ngIf="pagination">
+<div class="d-flex justify-content-center" *ngIf="pagination && !loading && messages?.length > 0">
     <pagination [boundaryLinks]="true" 
                 [totalItems]="pagination.totalItems" 
                 [itemsPerPage]="pagination.itemsPerPage"
