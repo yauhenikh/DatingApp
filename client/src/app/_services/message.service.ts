@@ -33,13 +33,15 @@ export class MessageService {
 
     this.hubConnection.on('ReceiveMessageThread', messages => {
       this.messageThreadSource.next(messages);
-    })
+    });
   }
 
   stopHubConnection() {
-    this.hubConnection
-      .stop()
-      .catch(error => console.log(error));
+    if (this.hubConnection) {
+      this.hubConnection
+        .stop()
+        .catch(error => console.log(error));
+    }
   }
 
   getMessages(pageNumber, pageSize, container) {
